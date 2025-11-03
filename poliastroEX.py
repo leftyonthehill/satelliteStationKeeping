@@ -22,7 +22,7 @@ orb = Orbit.from_classical(Earth, *state)
     ))"""
 # Time span for the simulation (keep period as a float in seconds)
 period = orb.period.to(u.s).value
-times = np.linspace(0, period * 500, num=1) * u.s  # Generate 300 time points
+times = np.linspace(0, period * 500, num=30) * u.s  # Generate 300 time points
 dt = times[1] - times[0]
 # Create the propagator once and reuse it (avoid constructing inside loop)
 propagator = CowellPropagator(f=dynamics_equations)
