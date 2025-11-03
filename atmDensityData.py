@@ -12,7 +12,7 @@ def atmDenstityData(solarCyclePhase, altitude_km):
         raise ValueError("Invalid solar cycle phase. Choose 'minimum', 'maximum', or 'mean'.")
 
 def densityAtSolarMinimum(altitude_km):
-    """Returns atmospheric density at solar minimum for a given altitude in km."""
+    """Returns atmospheric density in kg/m^3 at solar minimum for a given altitude in km."""
     densityAtAlt = {
         100:	5.71E-07,
         123:	4.38E-08,
@@ -58,10 +58,10 @@ def densityAtSolarMinimum(altitude_km):
     }
 
     rho = min([densityAtAlt[i] for i in densityAtAlt.keys() if i < altitude_km])
-    return rho * u.kg / u.km / u.km / u.km # in kg/km^3
+    return rho # in kg/m^3
 
 def densityAtSolarMaximum(altitude_km):
-    """Returns atmospheric density at solar max for a given altitude in km."""
+    """Returns atmospheric density in kg/m^3  at solar max for a given altitude in km."""
     densityAtAlt = {
         100:	5.70E-07,
         123:	4.50E-08,
@@ -107,8 +107,8 @@ def densityAtSolarMaximum(altitude_km):
     }
 
     rho = min([densityAtAlt[i] for i in densityAtAlt.keys() if i < altitude_km])
-    return rho * u.kg / u.km / u.km / u.km  # in kg/km^3
+    return rho # in kg/m^3
 def densityAtSolarMean(altitude_km):
-    """Returns atmospheric density at solar mean for a given altitude in km."""
+    """Returns atmospheric density in kg/m^3  at solar mean for a given altitude in km."""
 
     return (densityAtSolarMaximum(altitude_km) + densityAtSolarMinimum(altitude_km)) / 2  # in kg/km^3
