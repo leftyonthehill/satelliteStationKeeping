@@ -43,7 +43,6 @@ for _ in times[1:]:
     raan.append(orb.raan.to(u.deg).value)
     w.append(orb.argp.to(u.deg).value)
     t.append(orb.period.to(u.s).value / 60)  # Convert period to minutes
-    print(orb.epoch)
 
 # Plotting the RAAN over time and save a PNG as fallback
 fig = plt.figure()

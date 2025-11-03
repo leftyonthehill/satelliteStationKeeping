@@ -32,7 +32,6 @@ def ref_dynamics_equations(t0, state_vector, mu):
 
 def dynamics_equations(t0, state_vector, mu):
     twoBodyAccel = func_twobody(t0, state_vector, mu)
-    return twoBodyAccel
     j2Perturbation = J2_perturbation(t0, state_vector, mu, J2=Earth.J2.value, R=Earth.R.to(u.km).value)
     dragAcceleration = atmDrag(state_vector, beta=15)  # Example beta value
     # func_twobody returns a 6-element derivative [v, a]; J2_perturbation returns a 3-element
@@ -56,7 +55,7 @@ def atmDrag(state_vector, beta):
     ndarray
         Acceleration vector due to atmospheric drag in km/s^2.
     """
-    earthRotationRate = 7.2921159e-5  # rad/s
+    earthRotationRate = 7.2921159e-5 * u.rad / u.s # rad/s
 
     # Compute the effective velocity by accounting for Earth's rotation
     effective_velocity = state_vector[3:6] - np.cross([0, 0, earthRotationRate], state_vector[:3])
