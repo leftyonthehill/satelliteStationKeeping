@@ -1,3 +1,5 @@
+from astropy import units as u
+
 def atmDenstityData(solarCyclePhase, altitude_km):
     """Returns atmospheric density for a given solar cycle phase and altitude in km."""
     if solarCyclePhase == 'minimum':
@@ -56,7 +58,7 @@ def densityAtSolarMinimum(altitude_km):
     }
 
     rho = min([densityAtAlt[i] for i in densityAtAlt.keys() if i < altitude_km])
-    return rho  # in kg/km^3
+    return rho * u.kg / u.km / u.km / u.km # in kg/km^3
 
 def densityAtSolarMaximum(altitude_km):
     """Returns atmospheric density at solar max for a given altitude in km."""
@@ -105,7 +107,7 @@ def densityAtSolarMaximum(altitude_km):
     }
 
     rho = min([densityAtAlt[i] for i in densityAtAlt.keys() if i < altitude_km])
-    return rho  # in kg/km^3
+    return rho * u.kg / u.km / u.km / u.km  # in kg/km^3
 def densityAtSolarMean(altitude_km):
     """Returns atmospheric density at solar mean for a given altitude in km."""
 

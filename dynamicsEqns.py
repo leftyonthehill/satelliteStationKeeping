@@ -61,7 +61,7 @@ def atmDrag(state_vector, beta):
     effective_velocity = state_vector[3:6] - np.cross([0, 0, earthRotationRate], state_vector[:3])
 
     # Placeholder for atmospheric density model
-    rho = atmDenstityData("maximum", np.linalg.norm(state_vector[0:3]) - Earth.R_mean)  # kg/km^3, example constant density
+    rho = atmDenstityData("maximum", np.linalg.norm(state_vector[0:3]) - Earth.R.to(u.km).value)  # kg/km^3, example constant density
 
     v_rel = effective_velocity  # Relative velocity vector in km/s
     v_rel_mag = np.linalg.norm(v_rel)
