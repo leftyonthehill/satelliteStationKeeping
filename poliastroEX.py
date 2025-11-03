@@ -14,12 +14,12 @@ def main():
     v0 = [0, 7.5, 0] * u.km / u.s
     # orb = Orbit.from_vectors(Earth, r0, v0)
 
-    state = [6600 * u.km, 0.03 * u.one, 54 * u.deg, 360 * u.deg, 0 * u.deg, 0 * u.deg]
+    state = [6800 * u.km, 0.03 * u.one, 54 * u.deg, 360 * u.deg, 0 * u.deg, 0 * u.deg]
     orb = Orbit.from_classical(Earth, *state)
-
+    
     # Time span for the simulation (keep period as a float in seconds)
     period = orb.period.to(u.s).value
-    times = np.linspace(0, period * 1200, num=300) * u.s  # Generate 300 time points
+    times = np.linspace(0, period * 500, num=300) * u.s  # Generate 300 time points
     dt = times[1] - times[0]
     # Create the propagator once and reuse it (avoid constructing inside loop)
     propagator = CowellPropagator(f=dynamics_equations)
