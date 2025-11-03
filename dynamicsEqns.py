@@ -37,7 +37,7 @@ def dynamics_equations(t0, state_vector, mu):
     # func_twobody returns a 6-element derivative [v, a]; J2_perturbation returns a 3-element
     # acceleration vector. Add the J2 acceleration to the last three entries (accelerations)
     # and return the full 6-element derivative.
-    twoBodyAccel[3:6] = twoBodyAccel[3:6] + j2Perturbation + dragAcceleration
+    twoBodyAccel[3:6] = twoBodyAccel[3:6] + j2Perturbation #+ dragAcceleration
     return twoBodyAccel
 
 def atmDrag(state_vector, beta):
