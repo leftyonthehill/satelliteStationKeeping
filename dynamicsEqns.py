@@ -32,6 +32,7 @@ def ref_dynamics_equations(t0, state_vector, mu):
 
 def dynamics_equations(t0, state_vector, mu):
     twoBodyAccel = func_twobody(t0, state_vector, mu)
+    return twoBodyAccel
     j2Perturbation = J2_perturbation(t0, state_vector, mu, J2=Earth.J2.value, R=Earth.R.to(u.km).value)
     dragAcceleration = atmDrag(state_vector, beta=15)  # Example beta value
     # func_twobody returns a 6-element derivative [v, a]; J2_perturbation returns a 3-element

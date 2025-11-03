@@ -15,7 +15,11 @@ v0 = [0, 7.5, 0] * u.km / u.s
 
 state = [6800 * u.km, 0.03 * u.one, 54 * u.deg, 360 * u.deg, 0 * u.deg, 0 * u.deg]
 orb = Orbit.from_classical(Earth, *state)
-
+print(dynamics_equations(
+    0 * u.s, 
+    np.hstack((orb.r.to(u.km).value, orb.v.to(u.km / u.s).value)),
+    Earth.mass.value * u.G
+    ))
 # Time span for the simulation (keep period as a float in seconds)
 period = orb.period.to(u.s).value
 times = np.linspace(0, period * 500, num=300) * u.s  # Generate 300 time points
