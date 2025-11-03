@@ -69,4 +69,4 @@ def atmDrag(state_vector, beta):
     # Drag acceleration formula: a_drag = -0.5 * (rho * v^2 / beta) * (v / |v|)
     a_drag = -0.5 * (rho * v_rel_mag**2 / beta) * (v_rel / v_rel_mag)
 
-    return a_drag
+    return a_drag * u.km / u.s / u.s  # in km/s^2
