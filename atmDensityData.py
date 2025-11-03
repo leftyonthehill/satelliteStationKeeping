@@ -57,7 +57,7 @@ def densityAtSolarMinimum(altitude_km):
         1000:	1.20E-15,
     }
 
-    if altitude_km > 1000:
+    if altitude_km > 1000 or altitude_km < 100:
         rho = 0
     else:
         print(densityAtAlt)
@@ -110,7 +110,7 @@ def densityAtSolarMaximum(altitude_km):
         1000:	2.86E-15,
     }
 
-    if altitude_km > 1000:
+    if altitude_km > 1000 or altitude_km < 100:
         rho = 0
     else:
         rho = min([densityAtAlt[i] for i in densityAtAlt.keys() if i < altitude_km])
