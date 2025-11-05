@@ -2,7 +2,7 @@ from poliastro.twobody import Orbit
 from poliastro.bodies import Earth
 
 from poliastro.core.propagation import func_twobody
-from poliastro.core.perturbations import J2_perturbation
+from poliastro.core.perturbations import J2_perturbation, J3_perturbation
 
 from astropy import units as u
 
@@ -28,16 +28,19 @@ def ref_dynamics_equations(t0, state_vector, mu):
         Time derivative of the state vector [vx, vy, vz, ax, ay, az].
     """
     twoBodyAccel = func_twobody(t0, state_vector, mu)
+    j2Perturbation = J2_perturbation(t0, state_vector, mu, J2=Earth.J2.value, R=Earth.R.to(u.km).value)
+    twoBodyAccel[3:6] += j2Perturbation
     return twoBodyAccel
 
 def dynamics_equations(t0, state_vector, mu):
     twoBodyAccel = func_twobody(t0, state_vector, mu)
     j2Perturbation = J2_perturbation(t0, state_vector, mu, J2=Earth.J2.value, R=Earth.R.to(u.km).value)
+    j3Perturbation = J3_perturbation(t0, state_vector, mu, J3=Earth.J3.value, R=Earth.R.to(u.km).value)
     dragAcceleration = atmDrag(state_vector, beta=15)  # Example beta value
     # func_twobody returns a 6-element derivative [v, a]; J2_perturbation returns a 3-element
     # acceleration vector. Add the J2 acceleration to the last three entries (accelerations)
     # and return the full 6-element derivative.
-    twoBodyAccel[3:6] += j2Perturbation + dragAcceleration
+    twoBodyAccel[3:6] += j2Perturbation + j3Perturbation + dragAcceleration
     return twoBodyAccel
 
 def atmDrag(state_vector, beta):
@@ -67,6 +70,6 @@ def atmDrag(state_vector, beta):
     v_rel_mag = np.linalg.norm(v_rel)
 
     # Drag acceleration formula: a_drag = -0.5 * (rho * v^2 / beta) * (v / |v|)
-    a_drag = -0.5 * (rho * (1e3)**3 * v_rel_mag**2 / beta) * (v_rel / v_rel_mag)
+    a_drag = -0.5 * (rho * (1e3)**3 * v_rel_mag**2 / (beta * (1e3) ** 2)) * (v_rel / v_rel_mag)
 
     return a_drag # in km/s^2
