@@ -40,7 +40,7 @@ def dynamics_equations(t0, state_vector, mu):
     # func_twobody returns a 6-element derivative [v, a]; J2_perturbation returns a 3-element
     # acceleration vector. Add the J2 acceleration to the last three entries (accelerations)
     # and return the full 6-element derivative.
-    twoBodyAccel[3:6] += j2Perturbation + j3Perturbation + dragAcceleration
+    twoBodyAccel[3:6] += dragAcceleration + j2Perturbation + j3Perturbation
     return twoBodyAccel
 
 def atmDrag(state_vector, beta):
@@ -64,7 +64,7 @@ def atmDrag(state_vector, beta):
     effective_velocity = state_vector[3:6] - np.cross([0, 0, earthRotationRate], state_vector[:3])
 
     # Placeholder for atmospheric density model
-    rho = atmDenstityData("maximum", np.linalg.norm(state_vector[0:3]) - Earth.R.to(u.km).value)  # kg/km^3, example constant density
+    rho = atmDenstityData("maximum", np.linalg.norm(state_vector[0:3]) - Earth.R.to(u.km).value)  # kg/m^3, example constant density
 
     v_rel = effective_velocity  # Relative velocity vector in km/s
     v_rel_mag = np.linalg.norm(v_rel)
