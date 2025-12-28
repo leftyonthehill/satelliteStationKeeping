@@ -1,9 +1,8 @@
 from astropy import units as u
-from astropy.time import Time
 from poliastro.twobody import Orbit
 from poliastro.bodies import Earth
 from poliastro.twobody.propagation import CowellPropagator
-from dynamicsEqns import ref_dynamics_equations, dynamics_equations, atmDrag
+from dynamicsEqns import ref_dynamics_equations, dynamics_equations
 from op_zone_builder import op_zone_frame
 from op_zone_check import op_zone_check
 from RIC_offset import RIC_offset
@@ -13,7 +12,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from mpl_toolkits.mplot3d import Axes3D   # registers 3D projection
 
-state = [6880 * u.km, 0.003 * u.one, 54 * u.deg, 360 * u.deg, 0 * u.deg, 0 * u.deg]
+state = [6887.0 * u.km, 0.003 * u.one, 54 * u.deg, 360 * u.deg, 0 * u.deg, 0 * u.deg]
 ref_orb = Orbit.from_classical(Earth, *state)
 r, v = ref_orb.rv()
 
@@ -28,26 +27,8 @@ ops_bounds = [
 ]  # [timing_bounds (s), altitude_bounds (km), drift_bounds (deg)]
 trajectory, op_zone = op_zone_frame(currentState, ops_bounds)
 
-warningScale = 4
-warning_bounds = [
-    timeBound * warningScale**(1/3), 
-    radialBound * warningScale**(1/3), 
-    driftBound * warningScale**(1/3)
-]  # [timing_bounds (s), altitude_bounds (km), drift_bounds (deg)]
-trajectory, warning_zone = op_zone_frame(currentState, warning_bounds)
-
-maxBoundsScale = 32
-max_bounds = [
-    timeBound * maxBoundsScale**(1/3), 
-    radialBound * maxBoundsScale**(1/3), 
-    driftBound * maxBoundsScale**(1/3)
-]  # [timing_bounds (s), altitude_bounds (km), drift_bounds (deg)]
-trajectory, max_zone = op_zone_frame(currentState, max_bounds)
-
 operationBoundaries = {
-    "Operation Zone": op_zone,
-    "Drift Warning Zone": warning_zone,
-    "Maximum Drift Zone": max_zone,
+    "Operation Zone": op_zone
 }
 
 steps = 300
@@ -67,12 +48,11 @@ for _ in range(steps):
     rRef, vRef = ref_orb.rv()
     stateRef = [rRef[0].value, rRef[1].value, rRef[2].value, vRef[0].value, vRef[1].value, vRef[2].value]
 
-    ricOffset = RIC_offset(stateRef, stateTruth)
+    ricOffset, _ = RIC_offset(stateRef, stateTruth)
     pertubationDifferences[0].append(ricOffset[0])
     pertubationDifferences[1].append(ricOffset[1])
     pertubationDifferences[2].append(ricOffset[2])
     
-    dragAcceleration = atmDrag([rTruth[0].value, rTruth[1].value, rTruth[2].value, vTruth[0].value, vTruth[1].value, vTruth[2].value], beta=15)
     op_zone_check(ricOffset, operationBoundaries)
 
 """
@@ -129,15 +109,11 @@ line_sec,  = ax.plot([], [], [], 'k-', lw=1.5, label='Secondary (truth)')
 point_ref, = ax.plot([], [], [], 'bo', markersize=6)
 point_sec, = ax.plot([], [], [], 'ko', markersize=6)
 
-# ---- Optional: draw the operation zones once (static) ----------
-# (you already have op_zone, warning_zone, max_zone as lists of arrays)
+# ---- Draw the operation zones once (static) ----------
 def draw_zone(zone, color, alpha=0.4):
     for seg in zone:
         ax.plot(seg[0], seg[1], seg[2], color=color, alpha=alpha)
-draw_zone(op_zone,      'g')
-draw_zone(warning_zone, 'orange')
-draw_zone(max_zone,     'r')
-
+draw_zone(operationBoundaries['Operation Zone'],      'g')
 ax.legend()
 
 # --------------------------------------------------------------

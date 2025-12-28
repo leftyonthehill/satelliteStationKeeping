@@ -5,6 +5,7 @@ def RIC_offset(refState, offsetState):
     r_ref = np.array(refState[:3])
     v_ref = np.array(refState[3:6])
     r_offset = np.array(offsetState[:3])
+    v_offset = np.array(offsetState[3:6])
 
     # Compute unit vectors for RIC frame
     R = r_ref / np.linalg.norm(r_ref)
@@ -17,6 +18,9 @@ def RIC_offset(refState, offsetState):
     
     # Position in RIC frame
     delta_r = r_offset - r_ref
-    r_RIC = rotMatrix @ delta_r
+    delta_v = v_offset - v_ref
 
-    return r_RIC
+    r_RIC = rotMatrix @ delta_r
+    v_RIC = rotMatrix @ delta_v
+
+    return r_RIC, v_RIC, rotMatrix

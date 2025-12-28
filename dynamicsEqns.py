@@ -32,7 +32,7 @@ def ref_dynamics_equations(t0, state_vector, mu):
     twoBodyAccel[3:6] += j2Perturbation
     return twoBodyAccel
 
-def dynamics_equations(t0, state_vector, mu):
+def dynamics_equations(t0, state_vector, mu, thrust=np.array([0.0, 0.0, 0.0])):
     twoBodyAccel = func_twobody(t0, state_vector, mu)
     j2Perturbation = J2_perturbation(t0, state_vector, mu, J2=Earth.J2.value, R=Earth.R.to(u.km).value)
     j3Perturbation = J3_perturbation(t0, state_vector, mu, J3=Earth.J3.value, R=Earth.R.to(u.km).value)
@@ -40,7 +40,7 @@ def dynamics_equations(t0, state_vector, mu):
     # func_twobody returns a 6-element derivative [v, a]; J2_perturbation returns a 3-element
     # acceleration vector. Add the J2 acceleration to the last three entries (accelerations)
     # and return the full 6-element derivative.
-    twoBodyAccel[3:6] += dragAcceleration + j2Perturbation + j3Perturbation
+    twoBodyAccel[3:6] += dragAcceleration + j2Perturbation + j3Perturbation + thrust
     return twoBodyAccel
 
 def atmDrag(state_vector, beta):
